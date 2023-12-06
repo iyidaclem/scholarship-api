@@ -1,16 +1,21 @@
-name: CI -> Deploy to My website
+name: Deploy Private GitHub repository to cPanel
 on:
   push:
-    branches: [ main, development ]
+    branches:
+      - main
 jobs:
-  build:
+  FTP-Deploy-Action:
+    name: 🎉 Deploy
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      # Here is the deployment action
-      - name: Upload from public_html via FTP
-        uses: airvzxf/ftp-deployment-action@latest
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v3
         with:
-          server: scholarship.havilahkiddies-intl-school.com
-          user: ${{ secrets.FTP_USERNAME }}
+          fetch-depth: 2
+      - name: 📂 Sync folders and files to the server
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        with:
+          server: scholarship.havilahkiddies-intl-school.com/api
+          username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
